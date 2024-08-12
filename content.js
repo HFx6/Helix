@@ -1,5 +1,3 @@
-console.log("Content script loaded");
-
 const MAX_RETRIES = 2;
 const TIMEOUT = 5000;
 

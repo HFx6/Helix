@@ -187,10 +187,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	}
 	function sendMessageToBackground(userQuery) {
-		console.log(
-			"Sending message to background currentConversation:",
-			currentConversation
-		);
 		chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 			const message = {
 				action: "sendMessage",
@@ -201,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				activeTabId: tabs[0].id,
 				conversationId: currentConversation.id,
 			};
-			console.log("Sending message:", message);
+
 			chrome.runtime.sendMessage(message, (response) => {
 				if (chrome.runtime.lastError) {
 					console.error(
@@ -221,7 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
 						);
 					} catch (error) {
 						console.error("Error parsing response:", error);
-						console.log("Raw response:", response.response);
+
 						handleSendMessageError("Error parsing response");
 					}
 				} else {
@@ -271,9 +267,6 @@ document.addEventListener("DOMContentLoaded", () => {
 										chrome.runtime.lastError
 									);
 									if (retries > 0) {
-										console.log(
-											`Retrying... (${retries} attempts left)`
-										);
 										setTimeout(
 											() => attemptGetContent(),
 											1000
@@ -530,8 +523,6 @@ document.addEventListener("DOMContentLoaded", () => {
 									(a.messages[0].timestamp || 0)
 							);
 
-						console.log(conversations);
-
 						conversationsList.innerHTML = "";
 						conversations.forEach(([id, conversation]) => {
 							const regex = conversation.urlMatch.replace(
@@ -571,7 +562,7 @@ document.addEventListener("DOMContentLoaded", () => {
 								if (conversation.autoRun) {
 									li.classList.add("autorun");
 								}
-								console.log(id, currentConversation?.id);
+
 								if (id === currentConversation?.id) {
 									li.classList.add("active");
 								}
@@ -616,7 +607,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		chrome.storage.local.get(id, (result) => {
 			if (result[id]) {
 				autoRunToggleContainer.classList.remove("hidden");
-				console.log("Loading conversation:", id);
+
 				currentConversation = result[id];
 				displayConversation(currentConversation);
 				autoRunToggle.checked = currentConversation.autoRun;
@@ -666,10 +657,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function displayConversation(conversation) {
-		console.log("Displaying conversation:", conversation);
 		messages.innerHTML = "";
 		conversation.messages.forEach((msg, index) => {
-			console.log("Message:", msg);
 			switch (msg.role) {
 				case "user":
 					displayMessage(msg.role, msg.parts[0].text);
@@ -677,7 +666,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				case "model":
 					try {
 						const parsedResponse = jsonParser(msg.parts[0].text);
-						console.log("Parsed response:", parsedResponse);
+
 						displayMessage(
 							msg.role,
 							parsedResponse.friendly_message
@@ -728,7 +717,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function saveCurrentConversation(callback) {
-		console.log("Saving current conversation:", currentConversation);
 		if (currentConversation) {
 			chrome.runtime.sendMessage(
 				{
@@ -759,9 +747,6 @@ document.addEventListener("DOMContentLoaded", () => {
 											);
 											if (callback) callback(false);
 										} else {
-											console.log(
-												"Most recent conversation set successfully"
-											);
 											if (callback) callback(true);
 										}
 									}

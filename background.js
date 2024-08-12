@@ -62,13 +62,11 @@ chrome.webNavigation.onCommitted.addListener((details) => {
 });
 
 chrome.tabs.onCreated.addListener((tab) => {
-	console.log("Tab created: ", tab);
 	initTabState(tab.id);
 	mostRecentConversations[tab.id] = null;
 });
 
 chrome.tabs.onRemoved.addListener((tabId) => {
-	console.log("Tab removed: ", tabId);
 	cleanupTabState(tabId);
 });
 
@@ -90,7 +88,6 @@ function cleanupTabState(tabId) {
 }
 
 function startIconAnimation(tabId) {
-	console.log("Starting icon animation for tabId: ", tabId);
 	if (!iconAnimationIntervals[tabId]) {
 		iconAnimationIntervals[tabId] = setInterval(() => {
 			updateIcon(true, tabId);
@@ -111,7 +108,6 @@ async function updateIcon(isAnimating = false, tabId) {
 		let iconPath;
 		if (isAnimating) {
 			iconPath = `./images/loading_anim/FRAME_${ICON_STATES[currentIconState]}.png`;
-			console.log("Icon path: ", iconPath);
 		} else {
 			iconPath = `./images/sparkle_${
 				previousIconStates[tabId] || "ready"
@@ -119,13 +115,11 @@ async function updateIcon(isAnimating = false, tabId) {
 		}
 		await chromeBrowserAction.setIcon({ path: iconPath, tabId: tabId });
 	} catch (error) {
-		console.log(`Tab ${tabId} no longer exists, cleaning up state`);
 		cleanupTabState(tabId);
 	}
 }
 
 function stopIconAnimation(tabId) {
-	console.log("Stopping icon animation for tabId: ", tabId);
 	if (iconAnimationIntervals[tabId]) {
 		clearInterval(iconAnimationIntervals[tabId]);
 		delete iconAnimationIntervals[tabId];
@@ -139,28 +133,19 @@ async function setIconState(state, tabId) {
 		const iconPath = `./images/sparkle_${state}.png`;
 		await chromeBrowserAction.setIcon({ path: iconPath, tabId: tabId });
 	} catch (error) {
-		console.log(`Tab ${tabId} no longer exists, cleaning up state`);
 		cleanupTabState(tabId);
 	}
 }
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-	console.log(
-		currentIconState,
-		iconAnimationIntervals,
-		previousIconStates,
-		browserActiveScriptCount
-	);
-	console.log("Tab updated: ", tabId, changeInfo, tab);
 	if (changeInfo.status === "complete") {
-		
 		try {
 			const { showActiveCount } = await chromeStorage.sync.get([
 				"showActiveCount",
 			]);
 			browserActiveScriptCount[tabId] = 0;
 			const result = await chromeStorage.local.get(null);
-			console.log("Result: ", result);
+
 			let isScriptRunning = false;
 
 			for (const [id, conversation] of Object.entries(result)) {
@@ -176,22 +161,12 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 				const urlPattern = new RegExp(regex);
 				if (conversation.autoRun && urlPattern.test(tab.url)) {
 					isScriptRunning = true;
-					console.log("Auto running conversation: ", conversation);
-					console.log("Tab URL: ", tab.url);
 
-					console.log(
-						"Conversation messages: ",
-						JSON.parse(
-							conversation.messages[
-								conversation.messages.length - 1
-							].parts[0].text
-						).userscript
-					);
 					const userscript = jsonParser(
 						conversation.messages[conversation.messages.length - 1]
 							.parts[0].text
 					).userscript;
-					console.log("Running user script: ", userscript);
+
 					await chromeTabs.executeScript(tabId, { code: userscript });
 
 					if (showActiveCount) {
@@ -216,7 +191,6 @@ chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-	console.log("Request: ", sender);
 	const tabId = sender.tab ? sender.tab.id : request.activeTabId;
 
 	if (request.action === "sendMessage") {
@@ -236,7 +210,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 		return true;
 	}
 	if (request.action === "runUserScript") {
-		console.log("Running user script for tabId: ", tabId);
 		chromeTabs
 			.executeScript(tabId, { code: request.script })
 			.then((result) => {
@@ -291,7 +264,6 @@ async function saveConversation(
 	fullConversation = null
 ) {
 	if (fullConversation) {
-		
 		await chromeStorage.local.set({ [conversationId]: fullConversation });
 	} else {
 		const result = await chromeStorage.local.get(conversationId);
@@ -320,7 +292,6 @@ async function saveConversation(
 }
 
 async function sendMessageToGemini(request, tabId) {
-	console.log("sendMessageToGemini for tabId: ", tabId);
 	startIconAnimation(tabId);
 	try {
 		const {
@@ -345,8 +316,6 @@ async function sendMessageToGemini(request, tabId) {
 				"API key is not set. Please set it in the extension settings."
 			);
 		}
-
-		console.log("Request: ", request);
 
 		const cleanedConversationHistory = request.conversationHistory.map(
 			({ role, parts }) => ({
@@ -444,8 +413,7 @@ async function sendMessageToGemini(request, tabId) {
 			data.candidates[0].content
 		) {
 			const responseText = data.candidates[0].content.parts[0].text;
-			console.log("Response: ", responseText);
-			console.log("data: ", data);
+
 			const parsedResponse = JSON.parse(responseText);
 			return JSON.stringify(parsedResponse);
 		} else {
