@@ -1,0 +1,37 @@
+{
+	"manifest_version": 2,
+	"name": "Helix",
+	"version": "0.8.5",
+	"description": "Interact and create with Gemini within your browser",
+	"permissions": [
+		"storage",
+		"contextMenus",
+		"webNavigation",
+		"activeTab",
+		"tabs",
+		"https://generativelanguage.googleapis.com/",
+		"http://*/",
+		"https://*/"
+	],
+	"browser_action": {
+		"default_popup": "popup.html",
+		"default_icon": {
+			"30": "images/sparkle_ready.png"
+		}
+	},
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["content.js"]
+		}
+	],
+	"icons": {
+		"48": "images/sparkle_ready.png"
+	},
+	"background": {
+		"scripts": ["background.js"],
+		"persistent": false
+	},
+	"web_accessible_resources": ["images/sparkle_active.png"],
+	"content_security_policy": "script-src 'self'; object-src 'self'; connect-src https://generativelanguage.googleapis.com/"
+}

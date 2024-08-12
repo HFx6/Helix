@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Helix</title>
+		<link rel="stylesheet" href="popup.css" />
+	</head>
+	<body>
+		<div class="container">
+			<header>
+				<label class="hamburger menu-icon" id="menuToggle">
+					<input type="checkbox" id="menuToggleInput" />
+					<svg viewBox="0 0 32 32">
+						<path
+							class="line line-top-bottom"
+							d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
+						></path>
+						<path class="line" d="M7 16 27 16"></path>
+					</svg>
+				</label>
+				<div class="logo">
+					<img src="./images/logo_alt.png" alt="Helix Logo" />
+				</div>
+			</header>
+			<div id="autoRunToggleContainer" class="checkbox-wrapper-4 hidden">
+				<!-- <input type="checkbox" id="autoRunToggle" />
+				<img
+					src="./images/icons/auto.svg"
+					alt="Helix Logo"
+					class="autorunsvg"
+				/>
+				<span>Auto-run</span> -->
+
+				<input type="checkbox" id="autoRunToggle" class="inp-cbx" />
+				<label for="morning" class="cbx"
+					><span> <svg height="10px" width="12px"></svg></span
+					><span
+						><img
+							src="./images/icons/auto.svg"
+							alt="Helix Logo"
+							class="autorunsvg"
+						/>
+						Auto Run</span
+					></label
+				>
+				<svg class="inline-svg">
+					<symbol viewBox="0 0 12 10" id="check-4">
+						<polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+					</symbol>
+				</svg>
+			</div>
+			<div id="chatArea" class="chat-container">
+				<div id="messages"></div>
+
+				<div id="emptyState" class="empty-state">
+					<div class="emptyStateHeader">
+						<h1 id="welcomeheader">Hello</h1>
+						<span>What should we create today?</span>
+					</div>
+					<div class="examples">
+						<div
+							id="example1"
+							class="examplebox example1"
+							data-value="Add a scroll to top button"
+						>
+							<p>Add a scroll to top button</p>
+							<img src="./images/icons/edit.svg" alt="" />
+						</div>
+						<div
+							id="example2"
+							class="examplebox example2"
+							data-value="Change the style of this website to look like a nostalgic geocities page"
+						>
+							<p>Change the style of this website</p>
+							<img src="./images/icons/paint.svg" alt="" />
+						</div>
+						<div
+							id="example3"
+							class="examplebox example3"
+							data-value="Add a button that does something crazy"
+						>
+							<p>Add a button that does something crazy</p>
+							<img src="./images/icons/calc.svg" alt="" />
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="input-container">
+				<form id="messageForm">
+					<input
+						type="text"
+						id="messageInput"
+						placeholder="Type your message..."
+						autocomplete="one-time-code"
+					/>
+				</form>
+			</div>
+		</div>
+
+		<div id="menu" class="menu">
+			<div class="menutop">
+				<button id="settingsButton">
+					<img
+						id="menuicons"
+						src="./images/icons/settings.svg"
+						alt="Helix Logo"
+					/>
+					<span>Settings</span>
+				</button>
+				<!-- <button id="closeMenu" class="close-button">×</button> -->
+			</div>
+			<div class="menu-items">
+				<button id="newChatButton">
+					<img
+						id="menuicons"
+						src="./images/icons/chat.png"
+						alt="Helix Logo"
+					/>New Chat
+				</button>
+
+				<ul id="conversationsList"></ul>
+			</div>
+		</div>
+
+		<div id="settingsPanel" class="settings-panel hidden">
+			<div class="settings-panel-header">
+				<h2>Settings</h2>
+				<button id="closeSettings" class="close-button">×</button>
+			</div>
+			<form id="settingsForm">
+				<h3>API config</h3>
+				<label for="apiVersion">Gemini version:</label>
+
+				<select name="apiVersion" id="apiVersion" required>
+					<option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+					<option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+					<option value="gemini-1.5-pro-exp-0801">
+						Gemini-1.5-pro-exp-0801
+					</option>
+				</select>
+				<label for="apiKey"
+					>API Key:
+					<a
+						id="apikeyhow"
+						href="https://ai.google.dev/gemini-api/docs/api-key"
+						target="_blank"
+						rel="noopener noreferrer"
+						>get it here</a
+					></label
+				>
+				<input type="password" id="apiKey" required />
+
+				<label for="systemPrompt">System Prompt:</label>
+				<textarea id="systemPrompt" rows="4" required></textarea>
+
+				<h3>Options</h3>
+				<label class="filteroption">
+					<input type="checkbox" id="hideConversations" />
+					Only show conversations on matching URLs
+				</label>
+
+				<label class="showbadgeoption">
+					<input type="checkbox" id="showActiveCount" />
+					Show badge count on extension icon
+				</label>
+
+				<h3>User Info</h3>
+				<label for="userName">Name:</label>
+				<input type="text" id="userName" placeholder="John Smith" />
+
+				<label for="userLocation">Location:</label>
+				<input
+					type="text"
+					id="userLocation"
+					placeholder="Middle Earth"
+				/>
+
+				<label for="userLocale">Locale:</label>
+				<input type="text" id="userLocale" value="en-US" />
+				<div class="submitsettings">
+					<button type="submit">Save Settings</button>
+					<p id="settingsMessage" class="hidden">Saved!</p>
+				</div>
+			</form>
+		</div>
+
+		<div id="overlay" class="overlay"></div>
+
+		<script src="popup.js"></script>
+	</body>
+</html>
