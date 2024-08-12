@@ -21,7 +21,7 @@ You must output a complete userscript adhering to the following template:
 ```javascript
 // ==UserScript==
 // @name         {Descriptive Script Name}
-// @namespace    http://helixappext.com
+// @namespace    https://github.com/HFx6/Helix
 // @version      {Current Date in YYYY-MM-DD format}
 // @description  {Concise description of the script's functionality}
 // @author       You
