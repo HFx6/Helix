@@ -64,14 +64,14 @@ A script is active on this page with the total count
 
 ## Troubleshooting
 
-1. The request won't load, and the loading animation doesn't show:
+1. **The request won't load, and the loading animation doesn't show:**
 - Sometimes while editing the background script, The state will become stale and the active tab's will become unknown. close and reopen to fix this
 
-2. I can't acces Gemini 1.5 pro
+2. **I can't acces Gemini 1.5 pro**
 - Make sure that you have billing enabled in order to use Gemini pro (even the free tier).
 
-3. The script didn't do anything:
+3. **The script didn't do anything:**
 - Sometimes a script will fail, If this happens try asking Helix to fix it.
 
-4. A script isnt showing up on the right page:
+4. **A script isnt showing up on the right page:**
 - The url matching is based on the most recent response, ask Helix to change the response and it will be changed.
